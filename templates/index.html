@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner</title>
+    <script src="{{ url_for('static', filename='js/html5-qrcode.min.js') }}"></script>
+</head>
+<body>
+
+    <h1>Scan a QR Code</h1>
+    
+    <!-- Create a div where the QR code scanner will be rendered -->
+    <div id="reader" width="600px"></div>
+    <div id="result"></div>
+
+    <script type="text/javascript">
+        let html5QrcodeScanner;
+        function onScanSuccess(decodedText, decodedResult) {
+            // handle the scanned code as you like, for example:
+            document.getElementById('result').innerHTML = `<a href = "${decodedText}">${decodedText}</a>`;
+            console.log(`Code matched = ${decodedText}`, decodedResult);
+            
+            fetch('http://127.0.0.1:5000/random', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({qrdata: decodedText})
+            })
+                .then(response => response.json())
+                .then(result => console.log(result))
+                .catch(error => console.log('Error:', error));
+
+            html5QrcodeScanner.clear();
+        }
+
+        function onScanFailure(error) {
+            // handle scan failure, usually better to ignore and keep scanning.
+            // for example:
+            console.warn(`Code scan error = ${error}`);
+        }
+
+        html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader",
+        { fps: 10, qrbox: {width: 250, height: 250} },
+        /* verbose= */ false);
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+
+    </script>
+
+</body>
+</html>
