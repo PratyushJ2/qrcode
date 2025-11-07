@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 
@@ -5,6 +7,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///qr_codes.db'
 
 db = SQLAlchemy(app)
+
+application = app
 
 class QRCodes(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -28,4 +32,5 @@ def save_qr_code():
 if __name__ == '__main__':
     with app.app_context(): 
         db.create_all()
-    app.run(debug = True)
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port)

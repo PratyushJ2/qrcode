@@ -1,8 +1,10 @@
 # Ignore Python bytecode files
 __pycache__/
+*.pyc
 
 # Ignore virtual environment folder
 venv/
+venv-eb/
 
 # Ignore Node.js dependencies
 node_modules/
@@ -15,3 +17,8 @@ instance/
 
 # Ignore configuration files that may contain sensitive information
 .env
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
